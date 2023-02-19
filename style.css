@@ -6,6 +6,10 @@
     --dark: #38302e;
     --border-radius: .3rem;
   }
+  img{
+    max-width: fit-content;
+    max-height: fit-content;
+  }
   
   * {
     box-sizing: border-box;
