@@ -8,13 +8,13 @@
   <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,400i,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
   <link rel="stylesheet" href="style.css" />
-  <title>Git it Done</title>
+  <title>Age Guesser</title>
 </head>
 
 <body class="flex-column min-100-vh">
   <header class="hero">
-    <h1 class="app-title"><i class="fab fa-github"></i>WeatherAPI </h1>
-    <p>Find out the weather and forcast for a given city
+    <h1 class="app-title"><i class="fab fa-github"></i>Fun Fact Finder </h1>
+    <p>Find out a fun fact in response to your name
     </p>
   </header>
 
@@ -22,22 +22,31 @@
   <main class="flex-row justify-space-between" id="body">
     <div class="col-12 col-md-4">
       <div class="card">
-        <h3 class="card-header text-uppercase">Search By City</h3>
+        <h3 class="card-header text-uppercase">Personalized fun fact</h3>
         <form id="user-form" class="card-body">
-          <label class="form-label" for="username">City</label>
-          <input id="username" type="text" autofocus="true" class="curCity" />
-          <button type="button" class="btn submit" >Get City Weather</button>
+          <button type="button" class="btn " id="myBtn" >Get fun Fact</button>
         </form>
       </div>
 
       <div class="card">
-        <h3 class="card-header text-uppercase">Previously Viewed</h3>
+        <h3 class="card-header text-uppercase">Previously Used Names</h3>
         <div id="language-buttons" class="card-body buttons">
         </div>
       </div>
     </div>
   
-    <div class="col-12 col-md-8 btn" id="WeatherCard">
+    <div class="col-12 col-md-8 btn" id="infromationCard">
+    </div>
+    <div id="myModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h1>What's your name?</h1>
+        <input id="username" type="text" autofocus="true" class="name curName" />
+        <button type="button" class="btn submit">Find out what age an algorithm thinks you are and a fun fact about that number</button>
+      </div>
+    
     </div>
 
 

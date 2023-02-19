@@ -1,8 +1,5 @@
-var apiKey = "5a400b44d45e02507df0966926e7b809";
 
-var today=moment().format('l');
-
-if (localStorage.getItem("searches")==null){
+if (localStorage.getItem("searches")==null ||localStorage.getItem("searches")==""){
     var searches=[]
 }
 else{
@@ -13,13 +10,48 @@ else{
     }
 }
 
-function buildCard(day,temp,wind,humidity,icon){
-    var card='<div><h2 class="subtitle">'+day+'</h2><img src="http://openweathermap.org/img/wn/'+icon+'.png"></img>';
-    card=card+'<div id="repos-container" class="list-group">';
-    card=card+'<ul class="todayTemp">'+temp+'°F</ul>';
-    card=card+'<ul class="todayWind">'+wind+'mph</ul>';
-    card=card+'<ul class="todayHumidity">'+humidity+'%</ul></div>';
-    return card;
+// Get the modal from : https://www.w3schools.com/howto/howto_css_modals.asp
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal 
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+function getFact(age){
+    let queryURL = `http://numbersapi.com/${age}`;
+    $.get(queryURL).then(function (response) {
+        $('#infromationCard').append("<h3>The API NUMBERSAPI has this to say about that number: "+response+"</h3>");
+    })
+}
+
+function guessAge(name){
+    $('#infromationCard').empty();
+    $('#infromationCard').append("<h1>"+name+"</h1>");
+    let queryURL = `https://api.agify.io?name=${name}&country_id=US`;
+    $.get(queryURL).then(function (response) {
+        console.log(response);
+        $('#infromationCard').append("<h2>The API agify thinks you are: "+response.age+"</h2>");
+        getFact(response.age);
+    });
 }
 
 function generateButton(cityName){
@@ -27,54 +59,10 @@ function generateButton(cityName){
     $('.buttons').append(button);
 }
 
-
-function getLocation(location){
-    $('#WeatherCard').empty();
-    $('#WeatherCard').append("<h1>"+location+"</h1>");
-    let queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=imperial&APPID=${apiKey}`;
-    $.get(queryURL).then(function (response) {
-        console.log(response);
-
-        var lattitude=response.coord.lat;
-        var longitude=response.coord.lon;
-        var temp=response.main.temp;
-        var wind = response.wind.speed;
-        var humidity= response.main.humidity;
-        var icon= response.weather[0].icon;
-        console.log(response.weather[0]);
-        console.log(response.weather[0].icon);
-        //$(".subtitle").append(today);
-        //$(".todayTemp").append("Temperature : "+ temp);
-        //$(".todayWind").append("Wind Speed : "+ wind);
-        //$(".todayHumidity").append("Humidity : "+ humidity);
-        var todayCard=buildCard(today,temp,wind,humidity,icon);
-        $('#WeatherCard').append(todayCard);
-        let fivedayforcastURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lattitude}&lon=${longitude}&units=imperial&appid=${apiKey}`;
-        $.get(fivedayforcastURL).then(function (response) {
-        console.log(response);
-        console.log(response.list)
-        for(var x=7; x<=response.length;x=x+8){//this is due to the times between each measurement being 3 hours so we have to skip 8 entires or skip 24 hours
-            var daysPassed=(x+1)/8;
-            var curtime=response.list[x].dt
-            var entry=response.list[x]
-            var temp=entry.main.temp;
-            var wind = entry.wind.speed;
-            var humidity= entry.main.humidity;
-            var icon=entry.weather[0].icon;
-            var day=moment.unix(curtime).format('l');
-            console.log("x="+x+"  date is:"+moment.unix(curtime).format('l'))
-            var card=buildCard(day,temp,wind,humidity,icon);
-            $('#WeatherCard').append(card);
-        }
-    });
-    });
-    
-    }
-
-
 $(".submit").on("click",function () {
-    var inputedCity=$(this).siblings(".curCity").val();
-    getLocation(inputedCity);
+    modal.style.display = "none";
+    var inputedCity=$(this).siblings(".curName").val();
+    guessAge(inputedCity);
     if(searches.indexOf(inputedCity)==-1)
     {
         searches.push(inputedCity);
@@ -85,8 +73,7 @@ $(".submit").on("click",function () {
 });
 
 $(".load").on("click",function(){
-    console.log($(this).val())
-    getLocation($(this).text());
+    console.log($(this).val());
+    guessAge($(this).text());
 
 })
-
